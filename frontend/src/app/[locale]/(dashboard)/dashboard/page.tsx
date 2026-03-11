@@ -4,14 +4,28 @@ import { useEffect, useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui";
 import { apiClient } from "@/lib/api-client";
 import { useAuth } from "@/hooks";
-import type { HealthResponse } from "@/types";
+import type { HealthResponse, User } from "@/types";
 import { CheckCircle, XCircle, Loader2 } from "lucide-react";
+import { useAuthStore } from "@/stores";
 
 export default function DashboardPage() {
   const { user } = useAuth();
+  const {setUser} = useAuthStore()
   const [health, setHealth] = useState<HealthResponse | null>(null);
   const [healthLoading, setHealthLoading] = useState(true);
   const [healthError, setHealthError] = useState(false);
+
+  useEffect(() => {
+    (async function (){
+      try {
+        const userData = await apiClient.get<User>("/auth/me");
+        setUser(userData)
+      }catch (e) {
+        setUser(null)
+      }
+    })()
+
+  }, []);
 
   useEffect(() => {
     const checkHealth = async () => {
@@ -32,8 +46,8 @@ export default function DashboardPage() {
   return (
     <div className="space-y-4 sm:space-y-6">
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">
+        <h1 className="text-2xl font-bold sm:text-3xl">Dashboard</h1>
+        <p className="text-muted-foreground text-sm sm:text-base">
           Welcome back{user?.name ? `, ${user.name}` : ""}!
         </p>
       </div>
@@ -46,7 +60,7 @@ export default function DashboardPage() {
               {healthLoading ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : healthError ? (
-                <XCircle className="h-4 w-4 text-destructive" />
+                <XCircle className="text-destructive h-4 w-4" />
               ) : (
                 <CheckCircle className="h-4 w-4 text-green-500" />
               )}
@@ -63,7 +77,7 @@ export default function DashboardPage() {
                   Status: <span className="font-medium">{health?.status}</span>
                 </p>
                 {health?.version && (
-                  <p className="text-xs sm:text-sm text-muted-foreground">
+                  <p className="text-muted-foreground text-xs sm:text-sm">
                     Version: {health.version}
                   </p>
                 )}
