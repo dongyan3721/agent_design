@@ -1,0 +1,3 @@
+@echo off
+echo Starting production server...
+uv run --directory backend med_agent server run --host 0.0.0.0 --port 8000

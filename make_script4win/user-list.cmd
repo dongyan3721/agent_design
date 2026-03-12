@@ -1,0 +1,3 @@
+@echo off
+echo Listing all users...
+uv run --directory backend med_agent user list

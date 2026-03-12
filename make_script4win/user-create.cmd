@@ -1,0 +1,3 @@
+@echo off
+echo Creating new user...
+uv run --directory backend med_agent user create

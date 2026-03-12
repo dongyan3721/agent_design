@@ -1,0 +1,3 @@
+@echo off
+echo Showing API routes...
+uv run --directory backend med_agent server routes

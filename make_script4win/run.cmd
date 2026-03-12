@@ -1,0 +1,3 @@
+@echo off
+echo Starting development server...
+uv run --directory backend med_agent server run --reload

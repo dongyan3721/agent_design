@@ -1,0 +1,3 @@
+@echo off
+echo Running tests with coverage...
+uv run --directory backend pytest tests/ -v --cov=app --cov-report=html --cov-report=term-missing

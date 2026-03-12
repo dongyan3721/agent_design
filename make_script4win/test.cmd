@@ -1,0 +1,3 @@
+@echo off
+echo Running tests...
+uv run --directory backend pytest tests/ -v
