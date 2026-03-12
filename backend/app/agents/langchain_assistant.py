@@ -9,7 +9,8 @@ from typing import Any, TypedDict
 from langchain.agents import create_agent
 from langchain.messages import AIMessage, HumanMessage, SystemMessage
 from langchain.tools import tool
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
+# from langchain_openai import ChatOpenAI
 from app.agents.prompts import DEFAULT_SYSTEM_PROMPT
 from app.agents.tools import get_current_datetime
 from app.core.config import settings
@@ -53,10 +54,10 @@ class LangChainAssistant:
     """
 
     def __init__(
-        self,
-        model_name: str | None = None,
-        temperature: float | None = None,
-        system_prompt: str | None = None,
+            self,
+            model_name: str | None = None,
+            temperature: float | None = None,
+            system_prompt: str | None = None,
     ):
         self.model_name = model_name or settings.AI_MODEL
         self.temperature = temperature or settings.AI_TEMPERATURE
@@ -66,11 +67,16 @@ class LangChainAssistant:
 
     def _create_agent(self):
         """Create and configure the LangChain agent."""
-        model = ChatOpenAI(
-            model=self.model_name,
-            temperature=self.temperature,
-            api_key=settings.OPENAI_API_KEY,
+        model = ChatOllama(
+            model=settings.AI_MODEL,
+            temperature=settings.AI_TEMPERATURE,
+            # other params...
         )
+        # model = ChatOpenAI(
+        #     model=self.model_name,
+        #     temperature=self.temperature,
+        #     api_key=settings.OPENAI_API_KEY,
+        # )
         agent = create_agent(
             model=model,
             tools=self._tools,
@@ -88,8 +94,8 @@ class LangChainAssistant:
 
     @staticmethod
     def _convert_history(
-        history
-        : list[dict[str, str]] | None
+            history
+            : list[dict[str, str]] | None
     ) -> list[HumanMessage | AIMessage | SystemMessage]:
         """Convert conversation history to LangChain message format."""
         messages: list[HumanMessage | AIMessage | SystemMessage] = []
@@ -105,10 +111,10 @@ class LangChainAssistant:
         return messages
 
     async def run(
-        self,
-        user_input: str,
-        history: list[dict[str, str]] | None = None,
-        context: AgentContext | None = None,
+            self,
+            user_input: str,
+            history: list[dict[str, str]] | None = None,
+            context: AgentContext | None = None,
     ) -> tuple[str, list[Any], AgentContext]:
         """Run agent and return the output along with tool call events.
 
@@ -147,10 +153,10 @@ class LangChainAssistant:
         return output, tool_events, agent_context
 
     async def stream(
-        self,
-        user_input: str,
-        history: list[dict[str, str]] | None = None,
-        context: AgentContext | None = None,
+            self,
+            user_input: str,
+            history: list[dict[str, str]] | None = None,
+            context: AgentContext | None = None,
     ):
         """Stream agent execution with token-level streaming.
 
@@ -170,9 +176,9 @@ class LangChainAssistant:
         agent_context: AgentContext = context if context is not None else {}
 
         async for event in self.agent.astream(
-            {"messages": messages},
-            stream_mode=["messages", "updates"],
-            config={"configurable": agent_context} if agent_context else None,
+                {"messages": messages},
+                stream_mode=["messages", "updates"],
+                config={"configurable": agent_context} if agent_context else None,
         ):
             yield event
 
@@ -187,9 +193,9 @@ def get_agent() -> LangChainAssistant:
 
 
 async def run_agent(
-    user_input: str,
-    history: list[dict[str, str]],
-    context: AgentContext | None = None,
+        user_input: str,
+        history: list[dict[str, str]],
+        context: AgentContext | None = None,
 ) -> tuple[str, list[Any], AgentContext]:
     """Run agent and return the output along with tool call events.
 
