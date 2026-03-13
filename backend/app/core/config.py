@@ -72,6 +72,7 @@ class Settings(BaseSettings):
     AI_TEMPERATURE: float = 0.7
     AI_FRAMEWORK: str = "langchain"
     LLM_PROVIDER: str = "openai"
+    OLLAMA_HOST: str = "localhost"
     # === LangSmith Observability ===
     LANGCHAIN_TRACING_V2: bool = True
     LANGCHAIN_API_KEY: str | None = None

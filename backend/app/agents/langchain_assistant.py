@@ -64,12 +64,14 @@ class LangChainAssistant:
         self.system_prompt = system_prompt or DEFAULT_SYSTEM_PROMPT
         self._agent = None
         self._tools = [current_datetime]
+        self.host = settings.OLLAMA_HOST
 
     def _create_agent(self):
         """Create and configure the LangChain agent."""
         model = ChatOllama(
             model=self.model_name,
             temperature=self.temperature,
+            base_url=f"http://{self.host}:11434",
             # other params...
         )
         # model = ChatOpenAI(
