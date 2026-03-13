@@ -68,8 +68,8 @@ class LangChainAssistant:
     def _create_agent(self):
         """Create and configure the LangChain agent."""
         model = ChatOllama(
-            model=settings.AI_MODEL,
-            temperature=settings.AI_TEMPERATURE,
+            model=self.model_name,
+            temperature=self.temperature,
             # other params...
         )
         # model = ChatOpenAI(
